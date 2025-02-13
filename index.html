@@ -3,41 +3,189 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Grid</title>
-  <link rel="stylesheet" href="style.css">
-  <script type="module" src="script.mjs"></script>
+  <title>Document</title>
 </head>
 
 <body>
+  <style>
+    .warning {
+      color: #eee;
+      background: #bc0000;
+      padding: 3rem 4rem;
+      font-size: 150%;
+      line-height: 1.4;
+      text-align: left;
+      margin-bottom: 1em;
+    }
+
+    .warning a {
+      color: white;
+      text-decoration: underline;
+    }
+
+    @supports ((display: -ms-grid) or (display: grid)) {
+      .warning {
+        display: none;
+      }
+    }
+
+    #testV1 head {
+      display: block;
+    }
+
+    #testV1 {
+      display: flex;
+    }
+
+    #testV1 #style,
+    #testV1 #testV1 #result {
+      flex-direction: column;
+    }
+
+    #testV1 #result {
+      align-items: center;
+      justify-content: center;
+    }
+
+    #testV1 style[contenteditable]:after {
+      content: "";
+      color: green;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+
+    #testV1 style[contenteditable] {
+      display: block;
+      font-family: sans-serif;
+      text-shadow: none;
+      border: 1px solid hsl(0, 0%, 80%);
+      border-radius: 7px;
+      padding: 1em;
+      white-space: pre;
+      margin: 0 20px 20px;
+      outline: 0px solid transparent;
+      -webkit-user-modify: read-write-plaintext-only;
+      -mz-user-modify: read-write-plaintext-only;
+    }
+
+    #testV1 style[contenteditable]:hover {
+      color: white;
+      flex: 1;
+    }
+
+    #testV1 style#item1:hover {
+      background: red;
+    }
+
+    #testV1 style#item2:hover {
+      background: blue;
+
+    }
+
+    #testV1 style#item3:hover {
+      background: green;
+    }
+
+    #testV1 style#item4:hover {
+      background: grey;
+
+    }
+
+    #testV1 style#conteneur:hover {
+      background: black;
+    }
+
+
+
+
+    #testV1 .conteneur {
+      height: 378px;
+      width: 378px;
+      border: 1px dotted;
+      text-align: center;
+      resize: both;
+      overflow: hidden;
+
+    }
+
+    .item {
+      border: 1px solid;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    .item:hover:after {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      content: " < proportion de " attr(id);
+    }
+
+    .item:hover {
+      position: relative;
+      z-index: 20;
+    }
+
+    .conteneur:after {
+
+      content: "";
+
+      position: absolute;
+
+      z-index: 1;
+
+      top: 0px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+
+      background: linear-gradient(0deg, rgba(0, 0, 0, .05) 1px, transparent 2px),
+
+        linear-gradient(0deg, rgba(0, 0, 0, .1) 1px, transparent 2px),
+
+        linear-gradient(90deg, rgba(0, 0, 0, .05) 1px, transparent 1px),
+
+        linear-gradient(90deg, rgba(0, 0, 0, .1) 1px, transparent 1px);
+
+      background-size: 1cm 1cm, 1cm 1cm, 1cm 1cm, 1cm 1cm;
+
+    }
+
+
+    .conteneur {
+      position: relative;
+      background-color: white ! important;
+
+    }
+  </style>
+
 
   <article id="testV1">
     <section id="style">
 
-      <style contenteditable="" id="conteneur">.conteneur {
-
-}
+      <style contenteditable="" id="conteneur">
+        .conteneur {}
       </style>
-      <style contenteditable="" id="item1">#it1 {
-  
-}   
+      <style contenteditable="" id="item1">
+        #it1 {}
       </style>
-      <style contenteditable="" id="item2">#it2 {
-
-}
+      <style contenteditable="" id="item2">
+        #it2 {}
       </style>
-      <style contenteditable="" id="item3">#it3 {
-
-}
+      <style contenteditable="" id="item3">
+        #it3 {}
       </style>
-      <style contenteditable="" id="item4">#it4 {
-
-}
+      <style contenteditable="" id="item4">
+        #it4 {}
       </style>
     </section>
     <section id="result">
-
+      <div class="warning">
+        This demo only works in browsers that support CSS Grid Layout. If you can see this message, then your browser
+        isn't supporting Grid. You can try out Grid in <a href="http://dupontcss.blogspot.fr/2016/12/grid.html">other
+          browsers by flipping a flag</a>.</div>
       <div id="largeur">
       </div>
       <div class="conteneur">
@@ -55,9 +203,44 @@
 
   </article>
 
+  <script>
 
+    function proportion(n) {
+      return function (m) {
+        return (m / n).toFixed(1);
+      };
+    }
 
-  
+    function pxToCm(px) {
+      const dpi = 96; // Assuming screen density is 96 DPI
+      const cmPerInch = 2.54;
+      return ((px / dpi) * cmPerInch).toFixed(1);
+    }
+
+    function tick() {
+      let rapportBody = proportion(
+        document.querySelector("#testV1 .conteneur").offsetWidth
+      );
+      let conteneurWidthPx =
+        document.querySelector("#testV1 .conteneur").offsetWidth;
+      let conteneurWidthCm = pxToCm(conteneurWidthPx);
+      document.querySelector(
+        "#largeur"
+      ).textContent = `width = ${conteneurWidthCm} cm`;
+
+      let I = document.querySelectorAll("#testV1 .item");
+      for (let i = 0; i < I.length; i++) {
+        let itemWidthPx = I[i].offsetWidth;
+        let itemWidthCm = pxToCm(itemWidthPx);
+        I[i].textContent = `${rapportBody(itemWidthPx)} : ${itemWidthCm} cm`;
+      }
+
+      window.requestAnimationFrame(tick);
+    }
+
+    window.requestAnimationFrame(tick);
+
+  </script>
 
 </body>
 
